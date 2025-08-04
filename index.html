@@ -12,7 +12,7 @@
 <!-- ✅ OGP設定 -->
 <meta property="og:title" content="ビンゴの術（抽選機）数字1〜75" />
 <meta property="og:description" content="忍者の術で数字を召喚！1〜75の数字がランダムに出て重複なし。イベントやパーティに最適な無料オンラインビンゴ抽選機。" />
-<meta property="og:image" content="https://bingomachine.kkpwebninja.com/image/bingo-ogp.png" />
+<meta property="og:image" content="https://bingomachine.kkpwebninja.com/image/bingo-ogp.png?v=1" />
 <meta property="og:url" content="https://bingomachine.kkpwebninja.com" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -51,10 +51,15 @@ button {
 button:disabled {
   background-color: #ccc;
 }
+#column-label {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
 .big-ball {
   width: 200px;
   height: 200px;
-  margin: 1rem auto;
+  margin: 0 auto 0.5rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -66,6 +71,10 @@ button:disabled {
 }
 .spin {
   animation: spin 0.8s linear;
+}
+#remaining {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
 }
 .small-balls {
   display: flex;
@@ -108,7 +117,10 @@ button:disabled {
 <h1>🥷 ビンゴの術（抽選機）数字1〜75</h1>
 <p>忍者の術で数字を召喚！スタートボタンでランダムに抽選。全て出るまで重複なし！</p>
 
+<div id="column-label">?</div>
 <div id="current-ball" class="big-ball" style="background-color: gray;">?</div>
+
+<div id="remaining">残り 75 回</div>
 
 <div>
   <button id="start-btn">抽選スタート</button>
@@ -124,13 +136,20 @@ button:disabled {
 </div>
 
 <script>
-// 列ごとの色設定
+// 列ごとの色設定とBINGO列名
 const getBallColor = (num) => {
   if (num <= 15) return "#007bff"; // B: 青
   if (num <= 30) return "#dc3545"; // I: 赤
   if (num <= 45) return "#28a745"; // N: 緑
   if (num <= 60) return "#ffc107"; // G: 黄
   return "#fd7e14";               // O: オレンジ
+};
+const getColumnLetter = (num) => {
+  if (num <= 15) return "B";
+  if (num <= 30) return "I";
+  if (num <= 45) return "N";
+  if (num <= 60) return "G";
+  return "O";
 };
 
 let numbers = [];
@@ -140,6 +159,8 @@ const currentBall = document.getElementById("current-ball");
 const historyDiv = document.getElementById("history");
 const startBtn = document.getElementById("start-btn");
 const resetBtn = document.getElementById("reset-btn");
+const columnLabel = document.getElementById("column-label");
+const remainingText = document.getElementById("remaining");
 
 const initGame = () => {
   numbers = Array.from({ length: 75 }, (_, i) => i + 1)
@@ -147,7 +168,9 @@ const initGame = () => {
   drawnNumbers = [];
   currentBall.textContent = "?";
   currentBall.style.backgroundColor = "gray";
+  columnLabel.textContent = "?";
   historyDiv.innerHTML = "";
+  remainingText.textContent = `残り ${numbers.length} 回`;
   startBtn.disabled = false;
 };
 
@@ -159,6 +182,7 @@ const drawNumber = () => {
   }
   startBtn.disabled = true;
   currentBall.textContent = "?";
+  columnLabel.textContent = "?";
   currentBall.classList.add("spin"); // 回転開始
 
   setTimeout(() => {
@@ -167,6 +191,8 @@ const drawNumber = () => {
 
     currentBall.textContent = num;
     currentBall.style.backgroundColor = getBallColor(num);
+    columnLabel.textContent = getColumnLetter(num);
+    columnLabel.style.color = getBallColor(num);
     currentBall.classList.remove("spin"); // 回転終了
 
     // 履歴は昇順で表示
@@ -179,6 +205,8 @@ const drawNumber = () => {
       ball.style.backgroundColor = getBallColor(n);
       historyDiv.appendChild(ball);
     });
+
+    remainingText.textContent = `残り ${numbers.length} 回`;
 
     if (numbers.length > 0) {
       startBtn.disabled = false;
