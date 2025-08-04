@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ビンゴの術（抽選機）数字1〜75 - 無料オンラインビンゴ</title>
+
+<!-- ✅ SEO設定 -->
+<meta name="description" content="ビンゴの術！1〜75の数字をランダムに抽選する無料オンラインビンゴ抽選機。数字は全て出るまで重複なし。スマホ対応で忘年会・結婚式二次会・イベントに最適！">
+<meta name="keywords" content="ビンゴ,ビンゴ抽選機,オンラインビンゴ,無料,抽選,忘年会,イベント,ゲーム,忍者">
+
+<!-- ✅ OGP設定 -->
+<meta property="og:title" content="ビンゴの術（抽選機）数字1〜75" />
+<meta property="og:description" content="忍者の術で数字を召喚！1〜75の数字がランダムに出て重複なし。イベントやパーティに最適な無料オンラインビンゴ抽選機。" />
+<meta property="og:image" content="https://kkpwebninja.com/images/bingo-ogp.png" />
+<meta property="og:url" content="https://kkpwebninja.com/bingo" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- ✅ Google Analytics（いつものアナリティクス） -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2LM85GJN0L');
+</script>
+
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+  text-align: center;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 1rem;
+}
+h1 {
+  font-size: 1.6rem;
+  margin: 0.5rem 0 1rem;
+}
+button {
+  font-size: 1.2rem;
+  padding: 0.6rem 1.2rem;
+  margin: 0.5rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: #fff;
+}
+button:disabled {
+  background-color: #ccc;
+}
+.big-ball {
+  width: 200px;
+  height: 200px;
+  margin: 1rem auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  font-weight: bold;
+  color: white;
+  animation: pop 0.4s ease;
+}
+.small-balls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 6px;
+}
+.small-ball {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 1rem;
+}
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+#footer {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+#footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<h1>🥷 ビンゴの術（抽選機）数字1〜75</h1>
+<p>忍者の術で数字を召喚！スタートボタンでランダムに抽選。全て出るまで重複なし！</p>
+
+<div id="current-ball" class="big-ball" style="background-color: gray;">?</div>
+
+<div>
+  <button id="start-btn">抽選スタート</button>
+  <button id="reset-btn">リセット</button>
+</div>
+
+<h2>抽選履歴</h2>
+<div class="small-balls" id="history"></div>
+
+<div id="footer">
+  X <a href="https://x.com/kkp_webninja" target="_blank">@kkp_webninja</a> <br>
+  🏯 <a href="https://kkpwebninja.com" target="_blank">web忍者の本丸</a><br>
+</div>
+
+<script>
+// 列ごとの色設定
+const getBallColor = (num) => {
+  if (num <= 15) return "#007bff"; // B: 青
+  if (num <= 30) return "#dc3545"; // I: 赤
+  if (num <= 45) return "#28a745"; // N: 緑
+  if (num <= 60) return "#ffc107"; // G: 黄
+  return "#fd7e14";               // O: オレンジ
+};
+
+let numbers = [];
+let drawnNumbers = [];
+
+const currentBall = document.getElementById("current-ball");
+const historyDiv = document.getElementById("history");
+const startBtn = document.getElementById("start-btn");
+const resetBtn = document.getElementById("reset-btn");
+
+const initGame = () => {
+  numbers = Array.from({ length: 75 }, (_, i) => i + 1)
+    .sort(() => Math.random() - 0.5);
+  drawnNumbers = [];
+  currentBall.textContent = "?";
+  currentBall.style.backgroundColor = "gray";
+  historyDiv.innerHTML = "";
+  startBtn.disabled = false;
+};
+
+const drawNumber = () => {
+  if (numbers.length === 0) {
+    alert("全ての数字が抽選されました！");
+    startBtn.disabled = true;
+    return;
+  }
+  startBtn.disabled = true;
+  currentBall.textContent = "...";
+
+  setTimeout(() => {
+    const num = numbers.shift();
+    drawnNumbers.push(num);
+
+    currentBall.textContent = num;
+    currentBall.style.backgroundColor = getBallColor(num);
+
+    // 履歴は昇順で表示
+    const sortedHistory = [...drawnNumbers].sort((a, b) => a - b);
+    historyDiv.innerHTML = "";
+    sortedHistory.forEach(n => {
+      const ball = document.createElement("div");
+      ball.className = "small-ball";
+      ball.textContent = n;
+      ball.style.backgroundColor = getBallColor(n);
+      historyDiv.appendChild(ball);
+    });
+
+    if (numbers.length > 0) {
+      startBtn.disabled = false;
+    }
+  }, 800);
+};
+
+startBtn.addEventListener("click", drawNumber);
+resetBtn.addEventListener("click", initGame);
+
+// 初期化
+initGame();
+</script>
+
+</body>
+</html>
