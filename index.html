@@ -66,30 +66,75 @@ h1 {
   font-size: 1.1rem;
   margin-bottom: 1rem;
 }
+
+/* 豪華ボタン */
 button {
   font-size: 1.2rem;
-  padding: 0.6rem 1.2rem;
-  margin: 0.3rem;
+  padding: 0.8rem 1.8rem;
+  margin: 0.4rem;
   cursor: pointer;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #fff;
+  font-weight: bold;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+  background-size: 200% auto;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
 }
 #start-btn {
-  background-color: #28a745;
+  background-image: linear-gradient(45deg, #28a745, #5ae06d);
 }
 #reset-btn {
-  background-color: #dc3545;
+  background-image: linear-gradient(45deg, #dc3545, #ff6b81);
+}
+button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: rgba(255,255,255,0.3);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+button:hover::after {
+  left: 150%;
+}
+button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
 }
 button:disabled {
-  background-color: #ccc;
+  background: #ccc;
+  box-shadow: none;
+  transform: none;
 }
-.small-balls {
+
+/* BINGO履歴 */
+#bingo-history {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 6px;
+  gap: 10px;
   margin-top: 1rem;
+}
+.bingo-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bingo-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.bingo-numbers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 .small-ball {
   width: 40px;
@@ -102,6 +147,7 @@ button:disabled {
   color: white;
   font-size: 1rem;
 }
+
 #footer {
   margin-top: 2rem;
   font-size: 0.9rem;
@@ -121,15 +167,21 @@ button:disabled {
 <div id="current-ball" class="big-ball" style="background-color: gray;">?</div>
 <div id="remaining">残り 75 回</div>
 
-<!-- スタートボタンは中央上 -->
+<!-- スタートボタン -->
 <div>
   <button id="start-btn">抽選スタート</button>
 </div>
 
 <h2>抽選履歴</h2>
-<div class="small-balls" id="history"></div>
+<div id="bingo-history">
+  <div class="bingo-column"><div class="bingo-header" style="color:#007bff;">B</div><div class="bingo-numbers" id="col-B"></div></div>
+  <div class="bingo-column"><div class="bingo-header" style="color:#dc3545;">I</div><div class="bingo-numbers" id="col-I"></div></div>
+  <div class="bingo-column"><div class="bingo-header" style="color:#28a745;">N</div><div class="bingo-numbers" id="col-N"></div></div>
+  <div class="bingo-column"><div class="bingo-header" style="color:#ffc107;">G</div><div class="bingo-numbers" id="col-G"></div></div>
+  <div class="bingo-column"><div class="bingo-header" style="color:#fd7e14;">O</div><div class="bingo-numbers" id="col-O"></div></div>
+</div>
 
-<!-- リセットボタンを履歴の下 -->
+<!-- リセットボタン -->
 <div>
   <button id="reset-btn">リセット</button>
 </div>
@@ -159,7 +211,6 @@ let numbers = [];
 let drawnNumbers = [];
 
 const currentBall = document.getElementById("current-ball");
-const historyDiv = document.getElementById("history");
 const startBtn = document.getElementById("start-btn");
 const resetBtn = document.getElementById("reset-btn");
 const columnLabel = document.getElementById("column-label");
@@ -195,15 +246,26 @@ const updateDisplay = () => {
     columnLabel.textContent = "?";
     columnLabel.style.color = "black";
   }
+
+  // 各列クリア
+  ["B","I","N","G","O"].forEach(letter => {
+    document.getElementById(`col-${letter}`).innerHTML = "";
+  });
+
+  // 各列に数字追加
   const sortedHistory = [...drawnNumbers].sort((a, b) => a - b);
-  historyDiv.innerHTML = "";
   sortedHistory.forEach(n => {
     const ball = document.createElement("div");
     ball.className = "small-ball";
     ball.textContent = n;
     ball.style.backgroundColor = getBallColor(n);
-    historyDiv.appendChild(ball);
+    if (n <= 15) document.getElementById("col-B").appendChild(ball);
+    else if (n <= 30) document.getElementById("col-I").appendChild(ball);
+    else if (n <= 45) document.getElementById("col-N").appendChild(ball);
+    else if (n <= 60) document.getElementById("col-G").appendChild(ball);
+    else document.getElementById("col-O").appendChild(ball);
   });
+
   remainingText.textContent = `残り ${numbers.length} 回`;
   startBtn.disabled = numbers.length === 0;
 };
