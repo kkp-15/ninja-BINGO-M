@@ -64,6 +64,9 @@ button:disabled {
   color: white;
   animation: pop 0.4s ease;
 }
+.spin {
+  animation: spin 0.8s linear;
+}
 .small-balls {
   display: flex;
   flex-wrap: wrap;
@@ -85,6 +88,10 @@ button:disabled {
 @keyframes pop {
   0% { transform: scale(0.5); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 #footer {
   margin-top: 2rem;
@@ -151,7 +158,8 @@ const drawNumber = () => {
     return;
   }
   startBtn.disabled = true;
-  currentBall.textContent = "...";
+  currentBall.textContent = "?";
+  currentBall.classList.add("spin"); // 回転開始
 
   setTimeout(() => {
     const num = numbers.shift();
@@ -159,6 +167,7 @@ const drawNumber = () => {
 
     currentBall.textContent = num;
     currentBall.style.backgroundColor = getBallColor(num);
+    currentBall.classList.remove("spin"); // 回転終了
 
     // 履歴は昇順で表示
     const sortedHistory = [...drawnNumbers].sort((a, b) => a - b);
