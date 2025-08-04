@@ -17,7 +17,7 @@
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 
-<!-- ✅ Google Analytics（いつものアナリティクス） -->
+<!-- ✅ Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -36,30 +36,17 @@ body {
 }
 h1 {
   font-size: 1.6rem;
-  margin: 0.5rem 0 1rem;
-}
-button {
-  font-size: 1.2rem;
-  padding: 0.6rem 1.2rem;
-  margin: 0.5rem;
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  background-color: #007bff;
-  color: #fff;
-}
-button:disabled {
-  background-color: #ccc;
+  margin-bottom: 0.5rem;
 }
 #column-label {
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 .big-ball {
   width: 200px;
   height: 200px;
-  margin: 0 auto 0.5rem;
+  margin: 0.5rem auto 0.5rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -67,21 +54,42 @@ button:disabled {
   font-size: 5rem;
   font-weight: bold;
   color: white;
-  animation: pop 0.4s ease;
 }
 .spin {
   animation: spin 0.8s linear;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 #remaining {
   font-size: 1.1rem;
   margin-bottom: 1rem;
 }
+button {
+  font-size: 1.2rem;
+  padding: 0.6rem 1.2rem;
+  margin: 0.3rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+}
+#start-btn {
+  background-color: #28a745;
+}
+#reset-btn {
+  background-color: #dc3545;
+}
+button:disabled {
+  background-color: #ccc;
+}
 .small-balls {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 1rem;
   gap: 6px;
+  margin-top: 1rem;
 }
 .small-ball {
   width: 40px;
@@ -93,14 +101,6 @@ button:disabled {
   font-weight: bold;
   color: white;
   font-size: 1rem;
-}
-@keyframes pop {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 #footer {
   margin-top: 2rem;
@@ -119,16 +119,20 @@ button:disabled {
 
 <div id="column-label">?</div>
 <div id="current-ball" class="big-ball" style="background-color: gray;">?</div>
-
 <div id="remaining">残り 75 回</div>
 
+<!-- スタートボタンは中央上 -->
 <div>
   <button id="start-btn">抽選スタート</button>
-  <button id="reset-btn">リセット</button>
 </div>
 
 <h2>抽選履歴</h2>
 <div class="small-balls" id="history"></div>
+
+<!-- リセットボタンを履歴の下 -->
+<div>
+  <button id="reset-btn">リセット</button>
+</div>
 
 <div id="footer">
   X <a href="https://x.com/kkp_webninja" target="_blank">@kkp_webninja</a> <br>
@@ -136,13 +140,12 @@ button:disabled {
 </div>
 
 <script>
-// 列ごとの色設定とBINGO列名
 const getBallColor = (num) => {
-  if (num <= 15) return "#007bff"; // B: 青
-  if (num <= 30) return "#dc3545"; // I: 赤
-  if (num <= 45) return "#28a745"; // N: 緑
-  if (num <= 60) return "#ffc107"; // G: 黄
-  return "#fd7e14";               // O: オレンジ
+  if (num <= 15) return "#007bff"; 
+  if (num <= 30) return "#dc3545"; 
+  if (num <= 45) return "#28a745"; 
+  if (num <= 60) return "#ffc107"; 
+  return "#fd7e14";               
 };
 const getColumnLetter = (num) => {
   if (num <= 15) return "B";
@@ -162,63 +165,83 @@ const resetBtn = document.getElementById("reset-btn");
 const columnLabel = document.getElementById("column-label");
 const remainingText = document.getElementById("remaining");
 
+const saveState = () => {
+  localStorage.setItem("bingo_numbers", JSON.stringify(numbers));
+  localStorage.setItem("bingo_drawn", JSON.stringify(drawnNumbers));
+};
+
+const loadState = () => {
+  const savedNumbers = localStorage.getItem("bingo_numbers");
+  const savedDrawn = localStorage.getItem("bingo_drawn");
+  if (savedNumbers && savedDrawn) {
+    numbers = JSON.parse(savedNumbers);
+    drawnNumbers = JSON.parse(savedDrawn);
+    updateDisplay();
+    return true;
+  }
+  return false;
+};
+
+const updateDisplay = () => {
+  if (drawnNumbers.length > 0) {
+    const lastNum = drawnNumbers[drawnNumbers.length - 1];
+    currentBall.textContent = lastNum;
+    currentBall.style.backgroundColor = getBallColor(lastNum);
+    columnLabel.textContent = getColumnLetter(lastNum);
+    columnLabel.style.color = getBallColor(lastNum);
+  } else {
+    currentBall.textContent = "?";
+    currentBall.style.backgroundColor = "gray";
+    columnLabel.textContent = "?";
+    columnLabel.style.color = "black";
+  }
+  const sortedHistory = [...drawnNumbers].sort((a, b) => a - b);
+  historyDiv.innerHTML = "";
+  sortedHistory.forEach(n => {
+    const ball = document.createElement("div");
+    ball.className = "small-ball";
+    ball.textContent = n;
+    ball.style.backgroundColor = getBallColor(n);
+    historyDiv.appendChild(ball);
+  });
+  remainingText.textContent = `残り ${numbers.length} 回`;
+  startBtn.disabled = numbers.length === 0;
+};
+
 const initGame = () => {
   numbers = Array.from({ length: 75 }, (_, i) => i + 1)
     .sort(() => Math.random() - 0.5);
   drawnNumbers = [];
-  currentBall.textContent = "?";
-  currentBall.style.backgroundColor = "gray";
-  columnLabel.textContent = "?";
-  historyDiv.innerHTML = "";
-  remainingText.textContent = `残り ${numbers.length} 回`;
-  startBtn.disabled = false;
+  updateDisplay();
+  saveState();
 };
 
 const drawNumber = () => {
   if (numbers.length === 0) {
     alert("全ての数字が抽選されました！");
-    startBtn.disabled = true;
     return;
   }
   startBtn.disabled = true;
-  currentBall.textContent = "?";
-  columnLabel.textContent = "?";
-  currentBall.classList.add("spin"); // 回転開始
-
+  currentBall.classList.add("spin");
   setTimeout(() => {
     const num = numbers.shift();
     drawnNumbers.push(num);
-
-    currentBall.textContent = num;
-    currentBall.style.backgroundColor = getBallColor(num);
-    columnLabel.textContent = getColumnLetter(num);
-    columnLabel.style.color = getBallColor(num);
-    currentBall.classList.remove("spin"); // 回転終了
-
-    // 履歴は昇順で表示
-    const sortedHistory = [...drawnNumbers].sort((a, b) => a - b);
-    historyDiv.innerHTML = "";
-    sortedHistory.forEach(n => {
-      const ball = document.createElement("div");
-      ball.className = "small-ball";
-      ball.textContent = n;
-      ball.style.backgroundColor = getBallColor(n);
-      historyDiv.appendChild(ball);
-    });
-
-    remainingText.textContent = `残り ${numbers.length} 回`;
-
-    if (numbers.length > 0) {
-      startBtn.disabled = false;
-    }
+    updateDisplay();
+    saveState();
+    currentBall.classList.remove("spin");
   }, 800);
 };
 
 startBtn.addEventListener("click", drawNumber);
-resetBtn.addEventListener("click", initGame);
+resetBtn.addEventListener("click", () => {
+  if (confirm("リセットしますか？データは消えます。")) {
+    initGame();
+  }
+});
 
-// 初期化
-initGame();
+if (!loadState()) {
+  initGame();
+}
 </script>
 
 </body>
