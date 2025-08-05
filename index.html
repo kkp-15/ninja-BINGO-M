@@ -3,104 +3,313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ビンゴマシン｜1〜75の数字抽選</title>
-<meta name="description" content="1〜75の数字をランダムに抽選できるビンゴマシン。オンラインでイベントやパーティーに活用できます。">
-<meta name="keywords" content="ビンゴ,ビンゴマシン,抽選,オンライン,無料">
+<title>ビンゴの術（抽選機）数字1〜75 - 無料オンラインビンゴ</title>
 
-<!-- OGP設定 -->
-<meta property="og:title" content="ビンゴマシン｜1〜75の数字抽選" />
-<meta property="og:description" content="1〜75の数字をランダムに抽選できるオンラインビンゴマシン。イベントやパーティーに最適！" />
-<meta property="og:image" content="https://bingomachine.kkpwebninja.com/card-bingo-machine.png" />
+<!-- ✅ SEO設定 -->
+<meta name="description" content="ビンゴの術！1〜75の数字をランダムに抽選する無料オンラインビンゴ抽選機。数字は全て出るまで重複なし。スマホ対応で忘年会・結婚式二次会・イベントに最適！">
+<meta name="keywords" content="ビンゴ,ビンゴ抽選機,オンラインビンゴ,無料,抽選,忘年会,イベント,ゲーム,忍者">
+
+<!-- ✅ OGP設定 -->
+<meta property="og:title" content="ビンゴの術（抽選機）数字1〜75" />
+<meta property="og:description" content="忍者の術で数字を召喚！1〜75の数字がランダムに出て重複なし。イベントやパーティに最適な無料オンラインビンゴ抽選機。" />
+<meta property="og:image" content="https://bingomachine.kkpwebninja.com/image/bingo-ogp.png?v=1" />
 <meta property="og:url" content="https://bingomachine.kkpwebninja.com" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 
-<!-- Google Analytics -->
+<!-- ✅ Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2LM85GJN0L');
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2LM85GJN0L');
 </script>
 
 <style>
-  body { font-family: sans-serif; text-align: center; background: #f0f8ff; padding: 20px; }
-  h1 { font-size: 2rem; margin-bottom: 1rem; color: #0d47a1; }
-  #number { font-size: 3rem; margin: 20px 0; font-weight: bold; }
-  button { font-size: 1rem; padding: 10px 20px; margin: 5px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 3px 5px rgba(0,0,0,0.2); }
-  .btn-start { background: #43a047; color: white; }
-  .btn-reset { background: #e53935; color: white; }
-  #history { margin-top: 1rem; font-size: 1.2rem; line-height: 1.6; }
-  .link-section { margin-top: 1.5rem; font-size: 1.1rem; }
-  .link-section a { color: #0288d1; text-decoration: none; }
-  #footer { margin-top: 2rem; font-size: 0.9rem; color: #555; }
-  #footer a { color: #0288d1; text-decoration: none; }
+body {
+  font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+  text-align: center;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 1rem;
+}
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+#column-label {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+.big-ball {
+  width: 200px;
+  height: 200px;
+  margin: 0.5rem auto 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  font-weight: bold;
+  color: white;
+}
+.spin {
+  animation: spin 0.8s linear;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#remaining {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* 豪華ボタン */
+button {
+  font-size: 1.2rem;
+  padding: 0.8rem 1.8rem;
+  margin: 0.4rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+  background-size: 200% auto;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+#start-btn {
+  background-image: linear-gradient(45deg, #28a745, #5ae06d);
+}
+#reset-btn {
+  background-image: linear-gradient(45deg, #dc3545, #ff6b81);
+}
+button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: rgba(255,255,255,0.3);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+button:hover::after {
+  left: 150%;
+}
+button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+button:disabled {
+  background: #ccc;
+  box-shadow: none;
+  transform: none;
+}
+
+/* BINGO履歴 */
+#bingo-history {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1rem;
+}
+.bingo-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bingo-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.bingo-numbers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.small-ball {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 1rem;
+}
+
+#footer {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+#footer a {
+  color: #007bff;
+  text-decoration: none;
+}
 </style>
 </head>
 <body>
-  <h1>ビンゴマシン</h1>
-  <div id="number">--</div>
-  <button class="btn-start" onclick="drawNumber()">スタート</button>
-  <button class="btn-reset" onclick="resetMachine()">リセット</button>
-  <div id="history"></div>
 
-  <!-- ビンゴカードへのリンク -->
-  <div class="link-section">
-    🎴 <a href="https://bingo-card.kkpwebninja.com" target="_blank">ビンゴカードへ</a>
-  </div>
+<h1>🥷 ビンゴの術（抽選機）数字1〜75</h1>
+<p>忍者の術で数字を召喚！スタートボタンでランダムに抽選。全て出るまで重複なし！</p>
 
-  <div id="footer">
-    X <a href="https://x.com/kkp_webninja" target="_blank">@kkp_webninja</a><br>
-    🏯 <a href="https://kkpwebninja.com" target="_blank">web忍者の本丸</a><br>
-    各巻物（アプリ）の入り口は本丸ページに集めているでござる。
-  </div>
+<!-- ✅ ビンゴカード作成リンク -->
+<div style="margin: 1rem 0;">
+  <a href="https://bingo-card.kkpwebninja.com/" target="_blank" 
+     style="display:inline-block; padding:0.6rem 1rem; background-color:#e3f2fd; color:#1565c0; text-decoration:underline; font-weight:bold; border-radius:8px;">
+    ▶ ビンゴカードを作成する
+  </a>
+</div>
 
-  <script>
-    let numbers = Array.from({length: 75}, (_, i) => i + 1);
-    let drawn = [];
+<div id="column-label">?</div>
+<div id="current-ball" class="big-ball" style="background-color: gray;">?</div>
+<div id="remaining">残り 75 回</div>
 
-    function drawNumber() {
-      if (numbers.length === 0) {
-        alert("すべての数字が出ました！");
-        return;
-      }
-      const index = Math.floor(Math.random() * numbers.length);
-      const number = numbers.splice(index, 1)[0];
-      drawn.push(number);
-      document.getElementById('number').textContent = number;
-      updateHistory();
-      saveState();
-    }
+<!-- スタートボタン -->
+<div>
+  <button id="start-btn">抽選スタート</button>
+</div>
 
-    function resetMachine() {
-      if (!confirm("履歴をリセットしますか？")) return;
-      numbers = Array.from({length: 75}, (_, i) => i + 1);
-      drawn = [];
-      document.getElementById('number').textContent = "--";
-      updateHistory();
-      localStorage.removeItem('bingoMachineState');
-    }
+<h2>抽選履歴</h2>
+<div id="bingo-history">
+  <div class="bingo-column"><div class="bingo-header" style="color:#007bff;">B</div><div class="bingo-numbers" id="col-B"></div></div>
+  <div class="bingo-column"><div class="bingo-header" style="color:#dc3545;">I</div><div class="bingo-numbers" id="col-I"></div></div>
+  <div class="bingo-column"><div class="bingo-header" style="color:#28a745;">N</div><div class="bingo-numbers" id="col-N"></div></div>
+  <div class="bingo-column"><div class="bingo-header" style="color:#ffc107;">G</div><div class="bingo-numbers" id="col-G"></div></div>
+  <div class="bingo-column"><div class="bingo-header" style="color:#fd7e14;">O</div><div class="bingo-numbers" id="col-O"></div></div>
+</div>
 
-    function updateHistory() {
-      const historyDiv = document.getElementById('history');
-      historyDiv.textContent = drawn.join(', ');
-    }
+<!-- リセットボタン -->
+<div>
+  <button id="reset-btn">リセット</button>
+</div>
 
-    function saveState() {
-      localStorage.setItem('bingoMachineState', JSON.stringify({ numbers, drawn }));
-    }
+<div id="footer">
+  X <a href="https://x.com/kkp_webninja" target="_blank">@kkp_webninja</a> <br>
+  🏯 <a href="https://kkpwebninja.com" target="_blank">web忍者の本丸</a><br>
+</div>
 
-    function loadState() {
-      const saved = localStorage.getItem('bingoMachineState');
-      if (!saved) return;
-      const state = JSON.parse(saved);
-      numbers = state.numbers;
-      drawn = state.drawn;
-      updateHistory();
-    }
+<script>
+const getBallColor = (num) => {
+  if (num <= 15) return "#007bff";
+  if (num <= 30) return "#dc3545";
+  if (num <= 45) return "#28a745";
+  if (num <= 60) return "#ffc107";
+  return "#fd7e14";
+};
+const getColumnLetter = (num) => {
+  if (num <= 15) return "B";
+  if (num <= 30) return "I";
+  if (num <= 45) return "N";
+  if (num <= 60) return "G";
+  return "O";
+};
 
-    window.onload = loadState;
-  </script>
+let numbers = [];
+let drawnNumbers = [];
+
+const currentBall = document.getElementById("current-ball");
+const startBtn = document.getElementById("start-btn");
+const resetBtn = document.getElementById("reset-btn");
+const columnLabel = document.getElementById("column-label");
+const remainingText = document.getElementById("remaining");
+
+const saveState = () => {
+  localStorage.setItem("bingo_numbers", JSON.stringify(numbers));
+  localStorage.setItem("bingo_drawn", JSON.stringify(drawnNumbers));
+};
+
+const loadState = () => {
+  const savedNumbers = localStorage.getItem("bingo_numbers");
+  const savedDrawn = localStorage.getItem("bingo_drawn");
+  if (savedNumbers && savedDrawn) {
+    numbers = JSON.parse(savedNumbers);
+    drawnNumbers = JSON.parse(savedDrawn);
+    updateDisplay();
+    return true;
+  }
+  return false;
+};
+
+const updateDisplay = () => {
+  if (drawnNumbers.length > 0) {
+    const lastNum = drawnNumbers[drawnNumbers.length - 1];
+    currentBall.textContent = lastNum;
+    currentBall.style.backgroundColor = getBallColor(lastNum);
+    columnLabel.textContent = getColumnLetter(lastNum);
+    columnLabel.style.color = getBallColor(lastNum);
+  } else {
+    currentBall.textContent = "?";
+    currentBall.style.backgroundColor = "gray";
+    columnLabel.textContent = "?";
+    columnLabel.style.color = "black";
+  }
+
+  ["B","I","N","G","O"].forEach(letter => {
+    document.getElementById(`col-${letter}`).innerHTML = "";
+  });
+
+  const sortedHistory = [...drawnNumbers].sort((a, b) => a - b);
+  sortedHistory.forEach(n => {
+    const ball = document.createElement("div");
+    ball.className = "small-ball";
+    ball.textContent = n;
+    ball.style.backgroundColor = getBallColor(n);
+    if (n <= 15) document.getElementById("col-B").appendChild(ball);
+    else if (n <= 30) document.getElementById("col-I").appendChild(ball);
+    else if (n <= 45) document.getElementById("col-N").appendChild(ball);
+    else if (n <= 60) document.getElementById("col-G").appendChild(ball);
+    else document.getElementById("col-O").appendChild(ball);
+  });
+
+  remainingText.textContent = `残り ${numbers.length} 回`;
+  startBtn.disabled = numbers.length === 0;
+};
+
+const initGame = () => {
+  numbers = Array.from({ length: 75 }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+  drawnNumbers = [];
+  updateDisplay();
+  saveState();
+};
+
+const drawNumber = () => {
+  if (numbers.length === 0) {
+    alert("全ての数字が抽選されました！");
+    return;
+  }
+  startBtn.disabled = true;
+  currentBall.classList.add("spin");
+  setTimeout(() => {
+    const num = numbers.shift();
+    drawnNumbers.push(num);
+    updateDisplay();
+    saveState();
+    currentBall.classList.remove("spin");
+  }, 800);
+};
+
+startBtn.addEventListener("click", drawNumber);
+resetBtn.addEventListener("click", () => {
+  if (confirm("リセットしますか？データは消えます。")) {
+    initGame();
+  }
+});
+
+if (!loadState()) {
+  initGame();
+}
+</script>
+
 </body>
 </html>
